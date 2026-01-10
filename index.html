@@ -1,0 +1,776 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>School Memories Slam Book</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&amp;family=Quicksand:wght@400;500;600&amp;display=swap" rel="stylesheet">
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+    
+    * {
+      font-family: 'Quicksand', sans-serif;
+    }
+    
+    .font-display {
+      font-family: 'Playfair Display', serif;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(5deg); }
+    }
+    
+    @keyframes floatReverse {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-15px) rotate(-5deg); }
+    }
+    
+    @keyframes sparkle {
+      0%, 100% { opacity: 0; transform: scale(0); }
+      50% { opacity: 1; transform: scale(1); }
+    }
+    
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    
+    @keyframes filmRoll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    
+    .float-1 { animation: float 6s ease-in-out infinite; }
+    .float-2 { animation: floatReverse 7s ease-in-out infinite 0.5s; }
+    .float-3 { animation: float 5s ease-in-out infinite 1s; }
+    
+    .sparkle {
+      animation: sparkle 2s ease-in-out infinite;
+    }
+    
+    .card-enter {
+      animation: slideIn 0.6s ease-out forwards;
+    }
+    
+    .memory-card:hover {
+      transform: translateY(-8px) rotate(1deg);
+    }
+    
+    .film-strip {
+      animation: filmRoll 20s linear infinite;
+    }
+    
+    .film-strip:hover {
+      animation-play-state: paused;
+    }
+    
+    .writing-card {
+      background: linear-gradient(135deg, #fef9f3 0%, #fdf6ed 100%);
+      position: relative;
+    }
+    
+    .writing-card::before {
+      content: '';
+      position: absolute;
+      left: 30px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: #e8b4b8;
+      opacity: 0.5;
+    }
+    
+    .lined-paper {
+      background-image: repeating-linear-gradient(
+        transparent,
+        transparent 28px,
+        #e8d4c4 28px,
+        #e8d4c4 29px
+      );
+      line-height: 29px;
+      padding-top: 8px;
+    }
+    
+    .tape {
+      background: linear-gradient(135deg, rgba(255,235,180,0.9) 0%, rgba(255,220,150,0.8) 100%);
+      transform: rotate(-2deg);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .tape-alt {
+      transform: rotate(3deg);
+    }
+    
+    .polaroid {
+      background: white;
+      padding: 12px 12px 40px 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    }
+    
+    .video-frame {
+      background: linear-gradient(145deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .video-frame::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.3) 100%);
+      pointer-events: none;
+    }
+    
+    .play-btn {
+      transition: all 0.3s ease;
+    }
+    
+    .play-btn:hover {
+      transform: scale(1.15);
+      filter: drop-shadow(0 0 20px rgba(255,182,193,0.6));
+    }
+    
+    .nav-link {
+      position: relative;
+    }
+    
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #e8b4b8, #dda0a6);
+      transition: width 0.3s ease;
+    }
+    
+    .nav-link:hover::after {
+      width: 100%;
+    }
+    
+    .gradient-text {
+      background: linear-gradient(135deg, #e8b4b8 0%, #c9a0dc 50%, #9bb8d7 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .section-divider {
+      background: linear-gradient(90deg, transparent, #e8b4b8, #c9a0dc, #9bb8d7, transparent);
+      height: 2px;
+    }
+    
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: #fdf6ed;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, #e8b4b8, #c9a0dc);
+      border-radius: 10px;
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full">
+  <div id="app-wrapper" class="h-full w-full overflow-auto" style="background: linear-gradient(180deg, #fdf8f5 0%, #fef6f0 50%, #f8f4fb 100%);"><!-- Floating Decorations -->
+   <div class="fixed inset-0 pointer-events-none overflow-hidden">
+    <div class="absolute top-20 left-10 float-1">
+     <svg width="40" height="40" viewbox="0 0 40 40" fill="none"><path d="M20 5L23 17H35L25 25L28 37L20 29L12 37L15 25L5 17H17L20 5Z" fill="#e8b4b8" opacity="0.4" />
+     </svg>
+    </div>
+    <div class="absolute top-40 right-20 float-2">
+     <svg width="30" height="30" viewbox="0 0 30 30" fill="none"><circle cx="15" cy="15" r="12" fill="#c9a0dc" opacity="0.3" />
+     </svg>
+    </div>
+    <div class="absolute top-60 left-1/4 float-3">
+     <svg width="25" height="25" viewbox="0 0 25 25" fill="none"><path d="M12.5 2L15 10H23L16.5 15L19 23L12.5 18L6 23L8.5 15L2 10H10L12.5 2Z" fill="#9bb8d7" opacity="0.35" />
+     </svg>
+    </div>
+    <div class="absolute bottom-40 right-10 float-1" style="animation-delay: 2s;">
+     <svg width="35" height="35" viewbox="0 0 35 35" fill="none"><path d="M17.5 3C17.5 3 21 10 28 12C21 14 17.5 21 17.5 21C17.5 21 14 14 7 12C14 10 17.5 3 17.5 3Z" fill="#e8b4b8" opacity="0.4" />
+     </svg>
+    </div>
+    <div class="absolute bottom-20 left-20 float-2" style="animation-delay: 1s;">
+     <svg width="28" height="28" viewbox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="10" fill="#c9a0dc" opacity="0.25" />
+     </svg>
+    </div>
+   </div><!-- Navigation -->
+   <nav class="sticky top-0 z-50 backdrop-blur-md bg-white/70 border-b border-pink-100">
+    <div class="max-w-6xl mx-auto px-6 py-4">
+     <div class="flex items-center justify-between">
+      <div class="flex items-center gap-3">
+       <svg width="32" height="32" viewbox="0 0 32 32" fill="none"><rect x="4" y="4" width="24" height="24" rx="3" fill="url(#bookGrad)" /> <path d="M8 8H24M8 12H20M8 16H22M8 20H18" stroke="white" stroke-width="2" stroke-linecap="round" /> <defs>
+         <lineargradient id="bookGrad" x1="4" y1="4" x2="28" y2="28">
+          <stop offset="0%" stop-color="#e8b4b8" />
+          <stop offset="100%" stop-color="#c9a0dc" />
+         </lineargradient>
+        </defs>
+       </svg><span class="font-display text-xl font-semibold text-gray-800">Slam Book</span>
+      </div>
+      <div class="flex items-center gap-8"><a href="#memories" class="nav-link text-gray-600 hover:text-gray-900 font-medium transition-colors">Memories</a> <a href="#writings" class="nav-link text-gray-600 hover:text-gray-900 font-medium transition-colors">Writings</a> <a href="#video" class="nav-link text-gray-600 hover:text-gray-900 font-medium transition-colors">Year Rewind</a>
+      </div>
+     </div>
+    </div>
+   </nav><!-- Hero Section -->
+   <header class="relative py-20 px-6 text-center">
+    <div class="max-w-4xl mx-auto">
+     <div class="inline-block mb-6"><span class="tape px-6 py-2 text-sm font-medium text-amber-800 rounded-sm">📚 School Memories</span>
+     </div>
+     <h1 id="main-title" class="font-display text-6xl md:text-7xl font-bold gradient-text mb-4">Class of 2024</h1>
+     <p id="subtitle" class="text-2xl text-gray-600 font-medium mb-8">Forever Friends ✨</p>
+     <div class="flex justify-center gap-4 flex-wrap">
+      <div class="polaroid float-1" style="transform: rotate(-6deg);">
+       <div class="w-24 h-24 rounded bg-gradient-to-br from-pink-200 to-purple-200 flex items-center justify-center"><span class="text-4xl">🎓</span>
+       </div>
+      </div>
+      <div class="polaroid float-2" style="transform: rotate(4deg);">
+       <div class="w-24 h-24 rounded bg-gradient-to-br from-blue-200 to-pink-200 flex items-center justify-center"><span class="text-4xl">💫</span>
+       </div>
+      </div>
+      <div class="polaroid float-3" style="transform: rotate(-3deg);">
+       <div class="w-24 h-24 rounded bg-gradient-to-br from-purple-200 to-blue-200 flex items-center justify-center"><span class="text-4xl">🌸</span>
+       </div>
+      </div>
+     </div>
+    </div>
+   </header><!-- Section Divider -->
+   <div class="section-divider mx-auto max-w-md my-8"></div><!-- Memories Section -->
+   <section id="memories" class="py-16 px-6">
+    <div class="max-w-6xl mx-auto">
+     <div class="text-center mb-12"><span class="tape tape-alt inline-block px-4 py-1 text-xs font-medium text-amber-800 rounded-sm mb-4">Cherished Moments</span>
+      <h2 class="font-display text-4xl font-bold text-gray-800 mb-2">Our Memories 📸</h2>
+      <p class="text-gray-500">The moments that made us who we are</p>
+     </div>
+     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"><!-- Memory Card 1 -->
+      <div class="memory-card card-enter bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-pink-50" style="animation-delay: 0.1s;">
+       <div class="relative mb-4">
+        <div class="w-full h-48 rounded-xl bg-gradient-to-br from-pink-100 via-pink-50 to-purple-100 flex items-center justify-center relative overflow-hidden">
+         <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(232,180,184,0.3),transparent)]"></div><span class="text-6xl relative z-10">🎉</span>
+        </div>
+        <div class="absolute -top-2 -right-2 w-8 h-8 bg-pink-400 rounded-full flex items-center justify-center text-white text-sm font-bold shadow-md">
+         1
+        </div>
+       </div>
+       <h3 class="font-display text-xl font-semibold text-gray-800 mb-2">Annual Day 2024</h3>
+       <p class="text-gray-500 text-sm mb-3">The day we danced like nobody was watching! Our performance won hearts 💕</p>
+       <div class="flex items-center justify-between"><span class="text-xs text-pink-400 font-medium">March 15, 2024</span>
+        <div class="flex -space-x-2">
+         <div class="w-6 h-6 rounded-full bg-pink-200 border-2 border-white"></div>
+         <div class="w-6 h-6 rounded-full bg-purple-200 border-2 border-white"></div>
+         <div class="w-6 h-6 rounded-full bg-blue-200 border-2 border-white"></div>
+        </div>
+       </div>
+      </div><!-- Memory Card 2 -->
+      <div class="memory-card card-enter bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-purple-50" style="animation-delay: 0.2s;">
+       <div class="relative mb-4">
+        <div class="w-full h-48 rounded-xl bg-gradient-to-br from-purple-100 via-purple-50 to-blue-100 flex items-center justify-center relative overflow-hidden">
+         <div class="absolute inset-0 bg-[radial-gradient(circle_at_70%_70%,rgba(201,160,220,0.3),transparent)]"></div><span class="text-6xl relative z-10">🏕️</span>
+        </div>
+        <div class="absolute -top-2 -right-2 w-8 h-8 bg-purple-400 rounded-full flex items-center justify-center text-white text-sm font-bold shadow-md">
+         2
+        </div>
+       </div>
+       <h3 class="font-display text-xl font-semibold text-gray-800 mb-2">School Trip</h3>
+       <p class="text-gray-500 text-sm mb-3">Three days of adventure, laughter, and memories that'll last forever! 🌄</p>
+       <div class="flex items-center justify-between"><span class="text-xs text-purple-400 font-medium">January 20, 2024</span>
+        <div class="flex -space-x-2">
+         <div class="w-6 h-6 rounded-full bg-purple-200 border-2 border-white"></div>
+         <div class="w-6 h-6 rounded-full bg-pink-200 border-2 border-white"></div>
+         <div class="w-6 h-6 rounded-full bg-indigo-200 border-2 border-white"></div>
+        </div>
+       </div>
+      </div><!-- Memory Card 3 -->
+      <div class="memory-card card-enter bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-blue-50" style="animation-delay: 0.3s;">
+       <div class="relative mb-4">
+        <div class="w-full h-48 rounded-xl bg-gradient-to-br from-blue-100 via-blue-50 to-pink-100 flex items-center justify-center relative overflow-hidden">
+         <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(155,184,215,0.3),transparent)]"></div><span class="text-6xl relative z-10">🏆</span>
+        </div>
+        <div class="absolute -top-2 -right-2 w-8 h-8 bg-blue-400 rounded-full flex items-center justify-center text-white text-sm font-bold shadow-md">
+         3
+        </div>
+       </div>
+       <h3 class="font-display text-xl font-semibold text-gray-800 mb-2">Sports Day Victory</h3>
+       <p class="text-gray-500 text-sm mb-3">We ran, we jumped, we WON! Champions of the relay race! 🥇</p>
+       <div class="flex items-center justify-between"><span class="text-xs text-blue-400 font-medium">February 8, 2024</span>
+        <div class="flex -space-x-2">
+         <div class="w-6 h-6 rounded-full bg-blue-200 border-2 border-white"></div>
+         <div class="w-6 h-6 rounded-full bg-green-200 border-2 border-white"></div>
+         <div class="w-6 h-6 rounded-full bg-yellow-200 border-2 border-white"></div>
+        </div>
+       </div>
+      </div><!-- Memory Card 4 -->
+      <div class="memory-card card-enter bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-pink-50" style="animation-delay: 0.4s;">
+       <div class="relative mb-4">
+        <div class="w-full h-48 rounded-xl bg-gradient-to-br from-amber-100 via-orange-50 to-pink-100 flex items-center justify-center relative overflow-hidden">
+         <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_70%,rgba(251,191,36,0.2),transparent)]"></div><span class="text-6xl relative z-10">🎂</span>
+        </div>
+        <div class="absolute -top-2 -right-2 w-8 h-8 bg-amber-400 rounded-full flex items-center justify-center text-white text-sm font-bold shadow-md">
+         4
+        </div>
+       </div>
+       <h3 class="font-display text-xl font-semibold text-gray-800 mb-2">Surprise Party</h3>
+       <p class="text-gray-500 text-sm mb-3">That surprise birthday we threw for Ms. Sharma! Her reaction was priceless 🎈</p>
+       <div class="flex items-center justify-between"><span class="text-xs text-amber-500 font-medium">April 5, 2024</span>
+        <div class="flex -space-x-2">
+         <div class="w-6 h-6 rounded-full bg-amber-200 border-2 border-white"></div>
+         <div class="w-6 h-6 rounded-full bg-pink-200 border-2 border-white"></div>
+         <div class="w-6 h-6 rounded-full bg-red-200 border-2 border-white"></div>
+        </div>
+       </div>
+      </div><!-- Memory Card 5 -->
+      <div class="memory-card card-enter bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-green-50" style="animation-delay: 0.5s;">
+       <div class="relative mb-4">
+        <div class="w-full h-48 rounded-xl bg-gradient-to-br from-green-100 via-emerald-50 to-teal-100 flex items-center justify-center relative overflow-hidden">
+         <div class="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,rgba(52,211,153,0.2),transparent)]"></div><span class="text-6xl relative z-10">🎭</span>
+        </div>
+        <div class="absolute -top-2 -right-2 w-8 h-8 bg-emerald-400 rounded-full flex items-center justify-center text-white text-sm font-bold shadow-md">
+         5
+        </div>
+       </div>
+       <h3 class="font-display text-xl font-semibold text-gray-800 mb-2">Drama Club Night</h3>
+       <p class="text-gray-500 text-sm mb-3">Our Shakespeare play brought the house down! Standing ovation moment 🌟</p>
+       <div class="flex items-center justify-between"><span class="text-xs text-emerald-500 font-medium">November 12, 2023</span>
+        <div class="flex -space-x-2">
+         <div class="w-6 h-6 rounded-full bg-emerald-200 border-2 border-white"></div>
+         <div class="w-6 h-6 rounded-full bg-teal-200 border-2 border-white"></div>
+         <div class="w-6 h-6 rounded-full bg-cyan-200 border-2 border-white"></div>
+        </div>
+       </div>
+      </div><!-- Memory Card 6 -->
+      <div class="memory-card card-enter bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-indigo-50" style="animation-delay: 0.6s;">
+       <div class="relative mb-4">
+        <div class="w-full h-48 rounded-xl bg-gradient-to-br from-indigo-100 via-violet-50 to-purple-100 flex items-center justify-center relative overflow-hidden">
+         <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(129,140,248,0.2),transparent)]"></div><span class="text-6xl relative z-10">📚</span>
+        </div>
+        <div class="absolute -top-2 -right-2 w-8 h-8 bg-indigo-400 rounded-full flex items-center justify-center text-white text-sm font-bold shadow-md">
+         6
+        </div>
+       </div>
+       <h3 class="font-display text-xl font-semibold text-gray-800 mb-2">Library Adventures</h3>
+       <p class="text-gray-500 text-sm mb-3">Our secret book club meetings during lunch breaks 📖✨</p>
+       <div class="flex items-center justify-between"><span class="text-xs text-indigo-400 font-medium">Throughout 2024</span>
+        <div class="flex -space-x-2">
+         <div class="w-6 h-6 rounded-full bg-indigo-200 border-2 border-white"></div>
+         <div class="w-6 h-6 rounded-full bg-violet-200 border-2 border-white"></div>
+         <div class="w-6 h-6 rounded-full bg-purple-200 border-2 border-white"></div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section><!-- Section Divider -->
+   <div class="section-divider mx-auto max-w-md my-8"></div><!-- Writings Section -->
+   <section id="writings" class="py-16 px-6">
+    <div class="max-w-6xl mx-auto">
+     <div class="text-center mb-12"><span class="tape inline-block px-4 py-1 text-xs font-medium text-amber-800 rounded-sm mb-4">Heartfelt Words</span>
+      <h2 class="font-display text-4xl font-bold text-gray-800 mb-2">Slam Book Entries ✍️</h2>
+      <p class="text-gray-500">Words from the heart, memories on paper</p>
+     </div>
+     <div class="grid grid-cols-1 md:grid-cols-2 gap-8"><!-- Writing Entry 1 -->
+      <div class="writing-card rounded-2xl p-8 shadow-lg border border-amber-100 card-enter" style="animation-delay: 0.1s;">
+       <div class="pl-6">
+        <div class="flex items-center gap-4 mb-4">
+         <div class="w-12 h-12 rounded-full bg-gradient-to-br from-pink-300 to-purple-300 flex items-center justify-center text-xl shadow-md">
+          👧
+         </div>
+         <div>
+          <h4 class="font-display text-lg font-semibold text-gray-800">Priya Sharma</h4>
+          <p class="text-xs text-gray-400">Best Friend Forever</p>
+         </div>
+        </div>
+        <div class="lined-paper text-gray-600 italic mb-4">
+         "Remember when we got caught passing notes in History class? 😂 That detention was totally worth it! You've been my partner in crime since day one. Here's to many more adventures together! Never change, bestie! 💕"
+        </div>
+        <div class="flex items-center gap-2"><span class="text-pink-400">💗</span> <span class="text-xs text-gray-400">Written on Farewell Day</span>
+        </div>
+       </div>
+      </div><!-- Writing Entry 2 -->
+      <div class="writing-card rounded-2xl p-8 shadow-lg border border-amber-100 card-enter" style="animation-delay: 0.2s;">
+       <div class="pl-6">
+        <div class="flex items-center gap-4 mb-4">
+         <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-300 to-cyan-300 flex items-center justify-center text-xl shadow-md">
+          👦
+         </div>
+         <div>
+          <h4 class="font-display text-lg font-semibold text-gray-800">Arjun Patel</h4>
+          <p class="text-xs text-gray-400">The Class Clown</p>
+         </div>
+        </div>
+        <div class="lined-paper text-gray-600 italic mb-4">
+         "Bro, these 4 years flew by! From bunking PT together to acing that group project at the last minute - we've done it all! You're not just a classmate, you're family. Let's stay in touch forever! 🤝"
+        </div>
+        <div class="flex items-center gap-2"><span class="text-blue-400">⭐</span> <span class="text-xs text-gray-400">Written on Last Day</span>
+        </div>
+       </div>
+      </div><!-- Writing Entry 3 -->
+      <div class="writing-card rounded-2xl p-8 shadow-lg border border-amber-100 card-enter" style="animation-delay: 0.3s;">
+       <div class="pl-6">
+        <div class="flex items-center gap-4 mb-4">
+         <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-300 to-pink-300 flex items-center justify-center text-xl shadow-md">
+          👩
+         </div>
+         <div>
+          <h4 class="font-display text-lg font-semibold text-gray-800">Sneha Gupta</h4>
+          <p class="text-xs text-gray-400">The Topper</p>
+         </div>
+        </div>
+        <div class="lined-paper text-gray-600 italic mb-4">
+         "Thank you for making me laugh even during exam stress! Our late-night study sessions (mostly gossip sessions 😜) are my favorite memories. You taught me that grades aren't everything - friendship is! 📚💜"
+        </div>
+        <div class="flex items-center gap-2"><span class="text-purple-400">✨</span> <span class="text-xs text-gray-400">Written after Boards</span>
+        </div>
+       </div>
+      </div><!-- Writing Entry 4 -->
+      <div class="writing-card rounded-2xl p-8 shadow-lg border border-amber-100 card-enter" style="animation-delay: 0.4s;">
+       <div class="pl-6">
+        <div class="flex items-center gap-4 mb-4">
+         <div class="w-12 h-12 rounded-full bg-gradient-to-br from-amber-300 to-orange-300 flex items-center justify-center text-xl shadow-md">
+          👨‍🏫
+         </div>
+         <div>
+          <h4 class="font-display text-lg font-semibold text-gray-800">Mr. Raghav</h4>
+          <p class="text-xs text-gray-400">Class Teacher</p>
+         </div>
+        </div>
+        <div class="lined-paper text-gray-600 italic mb-4">
+         "Dear students, watching you grow from nervous freshers to confident graduates has been my greatest joy. You've taught me as much as I've taught you. Go conquer the world! I'm proud of each one of you. 🎓"
+        </div>
+        <div class="flex items-center gap-2"><span class="text-amber-500">🌟</span> <span class="text-xs text-gray-400">Farewell Speech</span>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section><!-- Section Divider -->
+   <div class="section-divider mx-auto max-w-md my-8"></div><!-- Video Section -->
+   <section id="video" class="py-16 px-6">
+    <div class="max-w-5xl mx-auto">
+     <div class="text-center mb-12"><span class="tape tape-alt inline-block px-4 py-1 text-xs font-medium text-amber-800 rounded-sm mb-4">Relive the Magic</span>
+      <h2 id="video-title" class="font-display text-4xl font-bold text-gray-800 mb-2">Year in Rewind 🎬</h2>
+      <p class="text-gray-500">A journey through our unforgettable year</p>
+     </div><!-- Video Player Container -->
+     <div class="video-frame rounded-3xl overflow-hidden shadow-2xl"><!-- Film Strip Animation -->
+      <div class="relative overflow-hidden py-4 bg-black/20">
+       <div class="film-strip flex gap-4 whitespace-nowrap">
+        <div class="flex gap-4">
+         <div class="w-20 h-14 rounded bg-gradient-to-br from-pink-200 to-purple-200 flex items-center justify-center flex-shrink-0">
+          📸
+         </div>
+         <div class="w-20 h-14 rounded bg-gradient-to-br from-blue-200 to-pink-200 flex items-center justify-center flex-shrink-0">
+          🎭
+         </div>
+         <div class="w-20 h-14 rounded bg-gradient-to-br from-purple-200 to-indigo-200 flex items-center justify-center flex-shrink-0">
+          🏆
+         </div>
+         <div class="w-20 h-14 rounded bg-gradient-to-br from-amber-200 to-orange-200 flex items-center justify-center flex-shrink-0">
+          🎉
+         </div>
+         <div class="w-20 h-14 rounded bg-gradient-to-br from-green-200 to-teal-200 flex items-center justify-center flex-shrink-0">
+          🎓
+         </div>
+         <div class="w-20 h-14 rounded bg-gradient-to-br from-red-200 to-pink-200 flex items-center justify-center flex-shrink-0">
+          ❤️
+         </div>
+         <div class="w-20 h-14 rounded bg-gradient-to-br from-cyan-200 to-blue-200 flex items-center justify-center flex-shrink-0">
+          ✨
+         </div>
+         <div class="w-20 h-14 rounded bg-gradient-to-br from-violet-200 to-purple-200 flex items-center justify-center flex-shrink-0">
+          🌟
+         </div>
+        </div>
+        <div class="flex gap-4">
+         <div class="w-20 h-14 rounded bg-gradient-to-br from-pink-200 to-purple-200 flex items-center justify-center flex-shrink-0">
+          📸
+         </div>
+         <div class="w-20 h-14 rounded bg-gradient-to-br from-blue-200 to-pink-200 flex items-center justify-center flex-shrink-0">
+          🎭
+         </div>
+         <div class="w-20 h-14 rounded bg-gradient-to-br from-purple-200 to-indigo-200 flex items-center justify-center flex-shrink-0">
+          🏆
+         </div>
+         <div class="w-20 h-14 rounded bg-gradient-to-br from-amber-200 to-orange-200 flex items-center justify-center flex-shrink-0">
+          🎉
+         </div>
+         <div class="w-20 h-14 rounded bg-gradient-to-br from-green-200 to-teal-200 flex items-center justify-center flex-shrink-0">
+          🎓
+         </div>
+         <div class="w-20 h-14 rounded bg-gradient-to-br from-red-200 to-pink-200 flex items-center justify-center flex-shrink-0">
+          ❤️
+         </div>
+         <div class="w-20 h-14 rounded bg-gradient-to-br from-cyan-200 to-blue-200 flex items-center justify-center flex-shrink-0">
+          ✨
+         </div>
+         <div class="w-20 h-14 rounded bg-gradient-to-br from-violet-200 to-purple-200 flex items-center justify-center flex-shrink-0">
+          🌟
+         </div>
+        </div>
+       </div>
+      </div><!-- Main Video Area -->
+      <div id="video-container" class="relative aspect-video flex items-center justify-center">
+       <div class="absolute inset-0 bg-gradient-to-br from-pink-500/10 via-purple-500/10 to-blue-500/10"></div><!-- Animated Background Elements -->
+       <div class="absolute inset-0 overflow-hidden">
+        <div class="absolute top-10 left-10 w-32 h-32 rounded-full bg-pink-500/20 blur-3xl float-1"></div>
+        <div class="absolute bottom-10 right-10 w-40 h-40 rounded-full bg-purple-500/20 blur-3xl float-2"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full bg-blue-500/10 blur-3xl float-3"></div>
+       </div><!-- Play Button & Info (default state) -->
+       <div id="play-overlay" class="relative z-10 text-center"><button id="play-btn" class="play-btn w-24 h-24 rounded-full bg-gradient-to-br from-pink-400 to-purple-500 flex items-center justify-center mx-auto shadow-xl mb-6">
+         <svg width="40" height="40" viewbox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z" />
+         </svg></button>
+        <h3 class="text-white font-display text-2xl font-semibold mb-2">Class of 2024 - The Movie</h3>
+        <p class="text-white/70 text-sm mb-4">12:34 • Best Moments Compilation</p>
+        <div class="flex justify-center gap-3"><span class="px-3 py-1 rounded-full bg-white/10 text-white/80 text-xs">🎵 Original Soundtrack</span> <span class="px-3 py-1 rounded-full bg-white/10 text-white/80 text-xs">✨ 4K Quality</span>
+        </div>
+       </div><!-- Playing State (hidden by default) -->
+       <div id="playing-state" class="hidden absolute inset-0 flex items-center justify-center">
+        <div class="text-center">
+         <div class="relative w-32 h-32 mx-auto mb-6">
+          <div class="absolute inset-0 rounded-full border-4 border-white/20"></div>
+          <div class="absolute inset-0 rounded-full border-4 border-t-pink-400 border-r-transparent border-b-transparent border-l-transparent animate-spin"></div>
+          <div class="absolute inset-4 rounded-full bg-gradient-to-br from-pink-400/50 to-purple-500/50 flex items-center justify-center"><span class="text-4xl">🎬</span>
+          </div>
+         </div>
+         <p class="text-white font-medium">Now Playing...</p>
+         <p class="text-white/60 text-sm mt-1">Your memories are being displayed</p><button id="pause-btn" class="mt-4 px-6 py-2 rounded-full bg-white/10 hover:bg-white/20 text-white text-sm transition-colors"> ⏸️ Pause </button>
+        </div>
+       </div>
+      </div><!-- Video Controls -->
+      <div class="bg-black/30 backdrop-blur-sm px-6 py-4">
+       <div class="flex items-center gap-4"><span class="text-white/80 text-sm font-medium">0:00</span>
+        <div class="flex-1 h-1.5 bg-white/20 rounded-full overflow-hidden">
+         <div id="progress-bar" class="h-full w-0 bg-gradient-to-r from-pink-400 to-purple-500 rounded-full transition-all duration-300"></div>
+        </div><span class="text-white/80 text-sm font-medium">12:34</span>
+       </div>
+       <div class="flex items-center justify-between mt-3">
+        <div class="flex items-center gap-4"><button class="text-white/70 hover:text-white transition-colors">
+          <svg width="20" height="20" viewbox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z" />
+          </svg></button> <button id="control-play" class="w-10 h-10 rounded-full bg-white flex items-center justify-center">
+          <svg id="control-play-icon" width="20" height="20" viewbox="0 0 24 24" fill="#1a1a2e"><path d="M8 5v14l11-7z" />
+          </svg></button> <button class="text-white/70 hover:text-white transition-colors">
+          <svg width="20" height="20" viewbox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z" />
+          </svg></button>
+        </div>
+        <div class="flex items-center gap-4"><button class="text-white/70 hover:text-white transition-colors text-sm flex items-center gap-1">
+          <svg width="16" height="16" viewbox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z" />
+          </svg> 75% </button> <button class="text-white/70 hover:text-white transition-colors">
+          <svg width="20" height="20" viewbox="0 0 24 24" fill="currentColor"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z" />
+          </svg></button>
+        </div>
+       </div>
+      </div>
+     </div><!-- Video Chapters -->
+     <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4"><button class="video-chapter p-4 rounded-xl bg-white shadow-md hover:shadow-lg transition-all hover:-translate-y-1 text-left border border-pink-50">
+       <div class="w-full h-20 rounded-lg bg-gradient-to-br from-pink-100 to-purple-100 flex items-center justify-center mb-3"><span class="text-2xl">🌅</span>
+       </div><p class="font-medium text-gray-800 text-sm">Chapter 1</p><p class="text-xs text-gray-400">The Beginning</p></button> <button class="video-chapter p-4 rounded-xl bg-white shadow-md hover:shadow-lg transition-all hover:-translate-y-1 text-left border border-purple-50">
+       <div class="w-full h-20 rounded-lg bg-gradient-to-br from-purple-100 to-blue-100 flex items-center justify-center mb-3"><span class="text-2xl">🎊</span>
+       </div><p class="font-medium text-gray-800 text-sm">Chapter 2</p><p class="text-xs text-gray-400">Fun Times</p></button> <button class="video-chapter p-4 rounded-xl bg-white shadow-md hover:shadow-lg transition-all hover:-translate-y-1 text-left border border-blue-50">
+       <div class="w-full h-20 rounded-lg bg-gradient-to-br from-blue-100 to-cyan-100 flex items-center justify-center mb-3"><span class="text-2xl">💪</span>
+       </div><p class="font-medium text-gray-800 text-sm">Chapter 3</p><p class="text-xs text-gray-400">Challenges</p></button> <button class="video-chapter p-4 rounded-xl bg-white shadow-md hover:shadow-lg transition-all hover:-translate-y-1 text-left border border-amber-50">
+       <div class="w-full h-20 rounded-lg bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center mb-3"><span class="text-2xl">🎓</span>
+       </div><p class="font-medium text-gray-800 text-sm">Chapter 4</p><p class="text-xs text-gray-400">Farewell</p></button>
+     </div>
+    </div>
+   </section><!-- Footer -->
+   <footer class="py-12 px-6 mt-8">
+    <div class="max-w-4xl mx-auto text-center">
+     <div class="mb-6">
+      <svg width="48" height="48" viewbox="0 0 48 48" fill="none" class="mx-auto mb-4"><path d="M24 4L27 16H39L29 24L32 36L24 28L16 36L19 24L9 16H21L24 4Z" fill="url(#starGrad)" /> <defs>
+        <lineargradient id="starGrad" x1="9" y1="4" x2="39" y2="36">
+         <stop offset="0%" stop-color="#e8b4b8" />
+         <stop offset="50%" stop-color="#c9a0dc" />
+         <stop offset="100%" stop-color="#9bb8d7" />
+        </lineargradient>
+       </defs>
+      </svg>
+      <p class="font-display text-xl text-gray-700 mb-2">Thanks for the memories! 💕</p>
+      <p class="text-gray-400 text-sm">Made with love by Class of 2024</p>
+     </div>
+     <div class="flex justify-center gap-6 mb-6"><a href="#memories" class="text-gray-400 hover:text-pink-400 transition-colors text-sm">Memories</a> <a href="#writings" class="text-gray-400 hover:text-pink-400 transition-colors text-sm">Writings</a> <a href="#video" class="text-gray-400 hover:text-pink-400 transition-colors text-sm">Year Rewind</a>
+     </div>
+     <p class="text-gray-300 text-xs">© 2024 Our School Memories • Forever in our hearts</p>
+    </div>
+   </footer>
+  </div>
+  <script>
+    const defaultConfig = {
+      main_title: 'Class of 2024',
+      subtitle: 'Forever Friends ✨',
+      video_title: 'Year in Rewind 🎬',
+      background_color: '#fdf8f5',
+      surface_color: '#ffffff',
+      text_color: '#1f2937',
+      primary_action: '#e8b4b8',
+      secondary_action: '#c9a0dc'
+    };
+
+    let isPlaying = false;
+    let progressInterval = null;
+    let currentProgress = 0;
+
+    // Video player functionality
+    function setupVideoPlayer() {
+      const playBtn = document.getElementById('play-btn');
+      const pauseBtn = document.getElementById('pause-btn');
+      const controlPlay = document.getElementById('control-play');
+      const playOverlay = document.getElementById('play-overlay');
+      const playingState = document.getElementById('playing-state');
+      const progressBar = document.getElementById('progress-bar');
+      const controlPlayIcon = document.getElementById('control-play-icon');
+
+      function togglePlay() {
+        isPlaying = !isPlaying;
+        if (isPlaying) {
+          playOverlay.classList.add('hidden');
+          playingState.classList.remove('hidden');
+          controlPlayIcon.innerHTML = '<rect x="6" y="4" width="4" height="16" fill="#1a1a2e"/><rect x="14" y="4" width="4" height="16" fill="#1a1a2e"/>';
+          startProgress();
+        } else {
+          playOverlay.classList.remove('hidden');
+          playingState.classList.add('hidden');
+          controlPlayIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+          stopProgress();
+        }
+      }
+
+      function startProgress() {
+        progressInterval = setInterval(() => {
+          currentProgress += 0.1;
+          if (currentProgress >= 100) {
+            currentProgress = 0;
+          }
+          progressBar.style.width = currentProgress + '%';
+        }, 100);
+      }
+
+      function stopProgress() {
+        if (progressInterval) {
+          clearInterval(progressInterval);
+          progressInterval = null;
+        }
+      }
+
+      playBtn.addEventListener('click', togglePlay);
+      pauseBtn.addEventListener('click', togglePlay);
+      controlPlay.addEventListener('click', togglePlay);
+    }
+
+    // Smooth scrolling for navigation
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    // Initialize video player
+    setupVideoPlayer();
+
+    // Element SDK Integration
+    async function onConfigChange(config) {
+      const mainTitle = document.getElementById('main-title');
+      const subtitle = document.getElementById('subtitle');
+      const videoTitle = document.getElementById('video-title');
+      const appWrapper = document.getElementById('app-wrapper');
+
+      if (mainTitle) mainTitle.textContent = config.main_title || defaultConfig.main_title;
+      if (subtitle) subtitle.textContent = config.subtitle || defaultConfig.subtitle;
+      if (videoTitle) videoTitle.textContent = config.video_title || defaultConfig.video_title;
+
+      // Apply colors
+      const bgColor = config.background_color || defaultConfig.background_color;
+      const surfaceColor = config.surface_color || defaultConfig.surface_color;
+      const textColor = config.text_color || defaultConfig.text_color;
+      const primaryColor = config.primary_action || defaultConfig.primary_action;
+      const secondaryColor = config.secondary_action || defaultConfig.secondary_action;
+
+      if (appWrapper) {
+        appWrapper.style.background = `linear-gradient(180deg, ${bgColor} 0%, ${bgColor} 50%, #f8f4fb 100%)`;
+      }
+
+      // Update memory cards background
+      document.querySelectorAll('.memory-card').forEach(card => {
+        card.style.backgroundColor = surfaceColor;
+      });
+
+      // Update text colors
+      document.querySelectorAll('.font-display').forEach(el => {
+        if (!el.classList.contains('gradient-text')) {
+          el.style.color = textColor;
+        }
+      });
+
+      // Update play button
+      const playBtnEl = document.getElementById('play-btn');
+      if (playBtnEl) {
+        playBtnEl.style.background = `linear-gradient(135deg, ${primaryColor}, ${secondaryColor})`;
+      }
+    }
+
+    function mapToCapabilities(config) {
+      return {
+        recolorables: [
+          {
+            get: () => config.background_color || defaultConfig.background_color,
+            set: (value) => { config.background_color = value; window.elementSdk.setConfig({ background_color: value }); }
+          },
+          {
+            get: () => config.surface_color || defaultConfig.surface_color,
+            set: (value) => { config.surface_color = value; window.elementSdk.setConfig({ surface_color: value }); }
+          },
+          {
+            get: () => config.text_color || defaultConfig.text_color,
+            set: (value) => { config.text_color = value; window.elementSdk.setConfig({ text_color: value }); }
+          },
+          {
+            get: () => config.primary_action || defaultConfig.primary_action,
+            set: (value) => { config.primary_action = value; window.elementSdk.setConfig({ primary_action: value }); }
+          },
+          {
+            get: () => config.secondary_action || defaultConfig.secondary_action,
+            set: (value) => { config.secondary_action = value; window.elementSdk.setConfig({ secondary_action: value }); }
+          }
+        ],
+        borderables: [],
+        fontEditable: undefined,
+        fontSizeable: undefined
+      };
+    }
+
+    function mapToEditPanelValues(config) {
+      return new Map([
+        ['main_title', config.main_title || defaultConfig.main_title],
+        ['subtitle', config.subtitle || defaultConfig.subtitle],
+        ['video_title', config.video_title || defaultConfig.video_title]
+      ]);
+    }
+
+    // Initialize SDK
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities,
+        mapToEditPanelValues
+      });
+    }
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9bbb5c38d7f72fe5',t:'MTc2ODAzOTU3MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
